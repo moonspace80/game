@@ -5,14 +5,40 @@
     <style>
         body { margin: 0; }
         canvas { display: block; }
+        #uiContainer {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 100;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+            padding: 10px;
+            border-radius: 5px; /* Rounded corners */
+            font-family: Arial, sans-serif;
+        }
+        #uiContainer label, #uiContainer input, #uiContainer button {
+            margin-bottom: 5px; /* Space below inputs/buttons */
+            display: block; /* Make label/input take full width available in container */
+        }
+        #uiContainer input {
+            width: 100px; /* Or a fixed width that suits */
+        }
+        #timerDisplay, #speedDisplay {
+            margin-top: 8px;
+            font-family: monospace;
+            font-size: 16px; /* Slightly larger for visibility */
+            padding: 2px 0;
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
-    <div style="position: absolute; top: 10px; left: 10px; z-index: 100; color: white;">
+    <div id="uiContainer">
         <button id="ultraButton">Ultra Button</button>
         <label for="speedInput">Speed:</label>
         <input type="text" id="speedInput" value="0">
+        <div id="timerDisplay">Timer: 00:00</div>
+        <div id="speedDisplay">Current Speed: 0</div>
     </div>
     <canvas id="gameCanvas"></canvas>
     <script src="game.js"></script>
