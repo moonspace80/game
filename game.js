@@ -1,17 +1,29 @@
-// Audio placeholders
-// TODO: Initialize and load retrowave 80's style music
-// const backgroundMusic = new Audio('path/to/retrowave_music.mp3');
-// backgroundMusic.loop = true;
-
-// TODO: Initialize and load alert sound
-// const alertSound = new Audio('path/to/alert_sound.mp3');
-
 // Scene setup
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('gameCanvas') });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
+
+// Audio
+const listener = new THREE.AudioListener();
+camera.add(listener); // Attach listener to the camera
+
+const backgroundMusic = new THREE.Audio(listener);
+const audioLoader = new THREE.AudioLoader();
+
+// Background Music: "1985 band by nyc"
+// Source: assets/audio/background_music.mp3 (originally 1985.mp3 provided by user)
+audioLoader.load('assets/audio/background_music.mp3', function(buffer) {
+    backgroundMusic.setBuffer(buffer);
+    backgroundMusic.setLoop(true);
+    backgroundMusic.setVolume(0.5); // Adjust volume as needed
+    // Do not play immediately; play when scene changes
+}, function (xhr) {
+    console.log((xhr.loaded / xhr.total * 100) + '% loaded'); // Optional: progress logging
+}, function (err) {
+    console.error('Error loading background music:', err);
+});
 
 // Lighting
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Soft white light
@@ -109,6 +121,11 @@ ultraButton.addEventListener('click', () => {
                 }
             });
             inCarScene = true;
+
+            // Play background music
+            if (backgroundMusic.buffer && !backgroundMusic.isPlaying) { // Check if loaded and not already playing
+                backgroundMusic.play();
+            }
             // TODO: Implement actual scene switch here (hiding group, showing car scene group)
         }
     } else {
@@ -123,6 +140,11 @@ ultraButton.addEventListener('click', () => {
                 }
             });
             inCarScene = false;
+
+            // Stop background music
+            if (backgroundMusic.isPlaying) {
+                backgroundMusic.stop(); // or .pause() if you want to resume from the same spot
+            }
             // TODO: Implement actual scene switch here
         }
     }
